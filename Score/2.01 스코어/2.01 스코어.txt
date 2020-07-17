@@ -1,0 +1,130 @@
+C:\Users\jh902\anaconda3\envs\cuda\python.exe C:/Users/jh902/PycharmProjects/rain/baseline.py
+2020-05-01 20:01:47.702602: I tensorflow/core/platform/cpu_feature_guard.cc:142] Your CPU supports instructions that this TensorFlow binary was not compiled to use: AVX2
+2020-05-01 20:01:47.705964: I tensorflow/stream_executor/platform/default/dso_loader.cc:42] Successfully opened dynamic library nvcuda.dll
+2020-05-01 20:01:47.897401: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1467] Found device 0 with properties: 
+name: GeForce RTX 2070 SUPER major: 7 minor: 5 memoryClockRate(GHz): 1.815
+pciBusID: 0000:08:00.0
+totalMemory: 8.00GiB freeMemory: 6.56GiB
+2020-05-01 20:01:47.897552: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1546] Adding visible gpu devices: 0
+2020-05-01 20:01:48.305319: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1015] Device interconnect StreamExecutor with strength 1 edge matrix:
+2020-05-01 20:01:48.305402: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1021]      0 
+2020-05-01 20:01:48.305444: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1034] 0:   N 
+2020-05-01 20:01:48.305579: I tensorflow/core/common_runtime/gpu/gpu_device.cc:1149] Created TensorFlow device (/job:localhost/replica:0/task:0/device:GPU:0 with 6294 MB memory) -> physical GPU (device: 0, name: GeForce RTX 2070 SUPER, pci bus id: 0000:08:00.0, compute capability: 7.5)
+WARNING:tensorflow:From C:\Users\jh902\anaconda3\envs\cuda\lib\site-packages\tensorflow\python\data\ops\dataset_ops.py:410: py_func (from tensorflow.python.ops.script_ops) is deprecated and will be removed in a future version.
+Instructions for updating:
+tf.py_func is deprecated in TF V2. Instead, there are two
+    options available in V2.
+    - tf.py_function takes a python function which manipulates tf eager
+    tensors instead of numpy arrays. It's easy to convert a tf eager tensor to
+    an ndarray (just call tensor.numpy()) but having access to eager tensors
+    means `tf.py_function`s can use accelerators such as GPUs as well as
+    being differentiable using a gradient tape.
+    - tf.numpy_function maintains the semantics of the deprecated tf.py_func
+    (it is not differentiable, and manipulates numpy arrays). It drops the
+    stateful argument making all functions stateful.
+    
+test: 100%|██████████| 2416/2416 [00:01<00:00, 1636.65it/s]
+Model: "model"
+__________________________________________________________________________________________________
+Layer (type)                    Output Shape         Param #     Connected to                     
+==================================================================================================
+input_1 (InputLayer)            [(None, 40, 40, 9)]  0                                            
+__________________________________________________________________________________________________
+conv2d (Conv2D)                 (None, 40, 40, 64)   5248        input_1[0][0]                    
+__________________________________________________________________________________________________
+conv2d_1 (Conv2D)               (None, 40, 40, 64)   36928       conv2d[0][0]                     
+__________________________________________________________________________________________________
+batch_normalization_v2 (BatchNo (None, 40, 40, 64)   256         conv2d_1[0][0]                   
+__________________________________________________________________________________________________
+max_pooling2d (MaxPooling2D)    (None, 20, 20, 64)   0           batch_normalization_v2[0][0]     
+__________________________________________________________________________________________________
+dropout (Dropout)               (None, 20, 20, 64)   0           max_pooling2d[0][0]              
+__________________________________________________________________________________________________
+conv2d_2 (Conv2D)               (None, 20, 20, 128)  73856       dropout[0][0]                    
+__________________________________________________________________________________________________
+conv2d_3 (Conv2D)               (None, 20, 20, 128)  147584      conv2d_2[0][0]                   
+__________________________________________________________________________________________________
+batch_normalization_v2_1 (Batch (None, 20, 20, 128)  512         conv2d_3[0][0]                   
+__________________________________________________________________________________________________
+max_pooling2d_1 (MaxPooling2D)  (None, 10, 10, 128)  0           batch_normalization_v2_1[0][0]   
+__________________________________________________________________________________________________
+dropout_1 (Dropout)             (None, 10, 10, 128)  0           max_pooling2d_1[0][0]            
+__________________________________________________________________________________________________
+conv2d_4 (Conv2D)               (None, 10, 10, 256)  295168      dropout_1[0][0]                  
+__________________________________________________________________________________________________
+conv2d_transpose (Conv2DTranspo (None, 20, 20, 128)  295040      conv2d_4[0][0]                   
+__________________________________________________________________________________________________
+concatenate (Concatenate)       (None, 20, 20, 256)  0           conv2d_transpose[0][0]           
+                                                                 conv2d_3[0][0]                   
+__________________________________________________________________________________________________
+dropout_2 (Dropout)             (None, 20, 20, 256)  0           concatenate[0][0]                
+__________________________________________________________________________________________________
+conv2d_5 (Conv2D)               (None, 20, 20, 128)  295040      dropout_2[0][0]                  
+__________________________________________________________________________________________________
+conv2d_6 (Conv2D)               (None, 20, 20, 128)  147584      conv2d_5[0][0]                   
+__________________________________________________________________________________________________
+batch_normalization_v2_2 (Batch (None, 20, 20, 128)  512         conv2d_6[0][0]                   
+__________________________________________________________________________________________________
+conv2d_transpose_1 (Conv2DTrans (None, 40, 40, 64)   73792       batch_normalization_v2_2[0][0]   
+__________________________________________________________________________________________________
+concatenate_1 (Concatenate)     (None, 40, 40, 128)  0           conv2d_transpose_1[0][0]         
+                                                                 conv2d_1[0][0]                   
+__________________________________________________________________________________________________
+dropout_3 (Dropout)             (None, 40, 40, 128)  0           concatenate_1[0][0]              
+__________________________________________________________________________________________________
+conv2d_7 (Conv2D)               (None, 40, 40, 64)   73792       dropout_3[0][0]                  
+__________________________________________________________________________________________________
+conv2d_8 (Conv2D)               (None, 40, 40, 64)   36928       conv2d_7[0][0]                   
+__________________________________________________________________________________________________
+batch_normalization_v2_3 (Batch (None, 40, 40, 64)   256         conv2d_8[0][0]                   
+__________________________________________________________________________________________________
+dropout_4 (Dropout)             (None, 40, 40, 64)   0           batch_normalization_v2_3[0][0]   
+__________________________________________________________________________________________________
+conv2d_9 (Conv2D)               (None, 40, 40, 1)    65          dropout_4[0][0]                  
+==================================================================================================
+Total params: 1,482,561
+Trainable params: 1,481,793
+Non-trainable params: 768
+__________________________________________________________________________________________________
+Epoch 1/20
+3845/3845 [==============================] - 80s 21ms/step - loss: 0.2952 - maeOverFscore_keras: 8850.4062 - fscore_keras: 0.5144
+Epoch 2/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2665 - maeOverFscore_keras: 2.7232 - fscore_keras: 0.6110
+Epoch 3/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2618 - maeOverFscore_keras: 2.5971 - fscore_keras: 0.6247
+Epoch 4/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2541 - maeOverFscore_keras: 2.4210 - fscore_keras: 0.6402
+Epoch 5/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2514 - maeOverFscore_keras: 2.3537 - fscore_keras: 0.6454
+Epoch 6/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2480 - maeOverFscore_keras: 2.2815 - fscore_keras: 0.6541
+Epoch 7/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2457 - maeOverFscore_keras: 2.2264 - fscore_keras: 0.6613
+Epoch 8/20
+3845/3845 [==============================] - 77s 20ms/step - loss: 0.2472 - maeOverFscore_keras: 2.3012 - fscore_keras: 0.6569
+Epoch 9/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2424 - maeOverFscore_keras: 2.1730 - fscore_keras: 0.6694
+Epoch 10/20
+3845/3845 [==============================] - 77s 20ms/step - loss: 0.2410 - maeOverFscore_keras: 2.1474 - fscore_keras: 0.6727
+Epoch 11/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2397 - maeOverFscore_keras: 2.1289 - fscore_keras: 0.6752
+Epoch 12/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2389 - maeOverFscore_keras: 2.1119 - fscore_keras: 0.6775
+Epoch 13/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2386 - maeOverFscore_keras: 2.1194 - fscore_keras: 0.6768
+Epoch 14/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2368 - maeOverFscore_keras: 2.0838 - fscore_keras: 0.6819
+Epoch 15/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2362 - maeOverFscore_keras: 2.0687 - fscore_keras: 0.6837
+Epoch 16/20
+3845/3845 [==============================] - 77s 20ms/step - loss: 0.2356 - maeOverFscore_keras: 2.0610 - fscore_keras: 0.6849
+Epoch 17/20
+3845/3845 [==============================] - 77s 20ms/step - loss: 0.2348 - maeOverFscore_keras: 2.0477 - fscore_keras: 0.6866
+Epoch 18/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2339 - maeOverFscore_keras: 2.0359 - fscore_keras: 0.6886
+Epoch 19/20
+3845/3845 [==============================] - 76s 20ms/step - loss: 0.2333 - maeOverFscore_keras: 2.0265 - fscore_keras: 0.6899
+Epoch 20/20
+3845/3845 [==============================] - 77s 20ms/step - loss: 0.2326 - maeOverFscore_keras: 2.0193 - fscore_keras: 0.6905
+
+Process finished with exit code 0

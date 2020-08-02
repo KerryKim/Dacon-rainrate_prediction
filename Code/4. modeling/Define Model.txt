@@ -1,0 +1,41 @@
+#Define model
+def get_model():
+    base_model = VGG16(include_top=False, weights='imagenet', input_shape=(img_row_size, img_col_size, 3))
+    base_encoder = Model(inputs=base_model.input, outputs=base_model.get_layer("block3_pool").output)
+    for layer in base_model.layers[:9]:
+        layer.trainable = False
+
+    # 5 x 5 x 256 -> 10 x 10 x 256
+    out = Conv2DTranspose(256, (3, 3), strides=(2, 2), padding="same")(base_encoder.output)
+    out = Dropout(0.25)(out)
+    out = Conv2D(256, (3, 3), activation="relu", padding="same")(out)
+    out = Conv2D(256, (3, 3), activation="relu", padding="same")(out)
+    out = BatchNormalization()(out)
+
+    # 10 x 10 x 256 -> 20 x 20 x 128
+    out = Conv2DTranspose(128, (3, 3), strides=(2, 2), padding="same")(out)
+    out = Dropout(0.25)(out)
+    out = Conv2D(128, (3, 3), activation="relu", padding="same")(out)
+    out = BatchNormalization()(out)
+
+    # 20 x 20 x 128 -> 40 x 40 x 64
+    out = Conv2DTranspose(64, (3, 3), strides=(2, 2), padding="same")(out)
+    out = Dropout(0.25)(out)
+    out = Conv2D(64, (3, 3), activation="relu", padding="same")(out)
+    out = BatchNormalization()(out)
+
+    # 40 x 40 x 64 -> 40 x 40 x 1
+    output = Conv2D(1, (1, 1), padding="same", activation='relu')(out)
+
+    model = Model(inputs=base_encoder.input, outputs=output)
+    return model
+
+-----------------------------------------------------------------------------------------------------------
+
+- 사전 학습 모델들에는 정해진 input size가 존재한다. (VGG16 =224, 224, 3)
+- Model(inputs= ~, outputs=~)를 통해서 내가 원하는 인풋과 아웃풋을 설정할 수 있다. "block3_pool"이란 네이밍을 알기 위해서
+  model.summary를 사용하면 된다.
+- 사전학습 모델 사용시 사전학습 모델에 학습에 사용된 데이터 중 내가 지금 학습하려는 데이터가 포함되어 있으면 그냥 모델 파라미터를 재학습 시키면 되는데
+  만약 사전학습 모델에 사용된 학습에 사용된 데이터중 내가 지금 학습하려는 데이터가 없다면 layer를 고정해서 파라미터를 건드리지 않는 것이 좋다.
+
+- Conv2DTranspose는 Unsampling+cov2d 한 것이다.

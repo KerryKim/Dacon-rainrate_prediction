@@ -1,0 +1,51 @@
+import os
+import glob
+import numpy as np
+
+
+train_files = glob.glob('data/train/*.npy')
+
+train_list = []
+target_list = []
+
+
+for file in train_files:
+    train_data = np.load(file)
+
+    feature = (train_data[:, :, :9])
+    train_list.append(feature.max())
+
+    target = (train_data[:, :, -1])
+    target_list.append(target.max())
+
+
+
+print((np.array(train_list)).shape)
+print((np.array(target_list).shape))
+
+# shape 결과 값으로 
+#(76345,)
+#(76345,)
+#가 나옴
+
+print(max(train_list))
+print(min(train_list))
+print(max(target_list))
+print(min(target_list))
+
+
+--------------------------------------------------------------
+list -> append, max(변수명)만 사용가능
+np.array -> concatante, (변수명).max만 사용가능
+
+list는 shape을 나타낼수 없으므로 array로 바꿔서 나타내야 함
+
+
+ValueError: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()
+
+값의 비교가 불가능한 경우 발생하는 에러 (max나 대소 비교 등)
+이번의 경우 꺾쇠가 많아서 (차원이 높아서) 각각의 값이 비교가 안되는 듯.
+(max가 한방에 진행되는게 아니라 a,b // b,c // c,d 이렇게 2개씩 비교하는 것같은데 차원이 높아서 그게 진행이 안되는 듯함)
+
+
+
